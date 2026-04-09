@@ -44,5 +44,10 @@ export async function bookAppointment(data: any, token: string) {
     body: JSON.stringify(data),
   });
 
+  // If the token is expired or invalid, let the UI handle it
+  if (res.status === 401) {
+    return { error: "UNAUTHORIZED" };
+  }
+
   return res.json();
 }
