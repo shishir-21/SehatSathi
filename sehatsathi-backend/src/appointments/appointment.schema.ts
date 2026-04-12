@@ -33,6 +33,19 @@ export class Appointment {
   @Prop()
   meetingLink: string;
 
+  // New detailed booking form fields
+  @Prop()
+  patientName: string;
+
+  @Prop()
+  patientAge: number;
+
+  @Prop()
+  problemDescription: string;
+
+  @Prop()
+  prescriptionUrl: string;
+
   // Status of appointment
   @Prop({ default: 'booked' })
   status: string;

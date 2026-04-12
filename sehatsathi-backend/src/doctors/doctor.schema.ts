@@ -20,6 +20,12 @@ export class Doctor {
 
   @Prop({ type: [String], default: ['online', 'offline'] })
   consultationModes: string[];
+
+  @Prop()
+  photoUrl: string;
+
+  @Prop({ type: [String] })
+  qualifications: string[];
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);
