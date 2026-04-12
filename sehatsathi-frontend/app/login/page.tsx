@@ -58,7 +58,7 @@ export default function LoginPage() {
         className="p-8 border rounded shadow-md w-96 bg-white"
       >
         <h1 className="text-xl font-bold mb-4 text-center">
-          Login to SehatSathi
+          Login to MediBrain
         </h1>
 
         {/* Email Input */}

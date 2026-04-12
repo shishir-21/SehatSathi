@@ -1,6 +1,6 @@
-# 🏥 SehatSathi Platform
+# 🏥 MediBrain Platform
 
-**SehatSathi** is a scalable, production-ready healthcare telemedicine platform connecting patients to doctors through online and offline consultations.
+**MediBrain** is a scalable, production-ready healthcare telemedicine platform connecting patients to doctors through online and offline consultations.
 
 ## 🌟 Features
 - **Online Consultation Booking**: Native support for telemedicine appointments.

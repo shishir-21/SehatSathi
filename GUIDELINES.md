@@ -1,4 +1,4 @@
-# 🏥 SehatSathi – Developer Guidelines & Workflow
+# 🏥 MediBrain – Developer Guidelines & Workflow
 
 ## 🎯 Project Goal
 
