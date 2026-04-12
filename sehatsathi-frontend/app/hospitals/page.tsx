@@ -8,6 +8,10 @@ export default function HospitalsDirectory() {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Search state with debounce
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   async function fetchAll() {
     try {
       const data = await getHospitals();
@@ -23,18 +27,26 @@ export default function HospitalsDirectory() {
     fetchAll();
   }, []);
 
+  // Debounce effect logic
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   const handleSeed = async () => {
     await seedHospitals();
     fetchAll();
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading Top Hospitals...</div>;
+  if (loading) return <div className="p-8 text-center text-gray-500">Loading Hospitals...</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 mt-8">
       <div className="flex justify-between items-center mb-8 border-b pb-4">
          <div>
-           <h1 className="text-3xl font-bold text-gray-900">Top Hospitals in India</h1>
+           <h1 className="text-3xl font-bold text-gray-900">Hospitals in India</h1>
            <p className="text-gray-500 mt-2">Find the best care facilities and their respective specialists.</p>
          </div>
          {hospitals.length === 0 && (
@@ -44,8 +56,31 @@ export default function HospitalsDirectory() {
          )}
       </div>
 
+      {/* Modern Search Bar */}
+      <div className="mb-8 flex gap-3">
+        <input 
+          type="text"
+          placeholder="Search by Hospital Name or City..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
+          className="flex-1 border border-gray-300 p-4 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 text-lg"
+        />
+        <button 
+          onClick={() => setDebouncedSearch(searchQuery)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-sm transition"
+        >
+          Search
+        </button>
+      </div>
+
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {hospitals.map((hosp: any) => (
+        {hospitals
+          .filter((hosp: any) => 
+            hosp.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+            hosp.location?.toLowerCase().includes(debouncedSearch.toLowerCase())
+          )
+          .map((hosp: any) => (
           <div key={hosp._id} className="border border-gray-200 rounded-2xl shadow-sm bg-white hover:shadow-lg overflow-hidden flex flex-col transition h-full text-gray-800">
              {/* Hospital Image */}
              <div 
