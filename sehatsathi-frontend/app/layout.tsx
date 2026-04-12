@@ -38,6 +38,9 @@ export default function RootLayout({
             <div className="flex gap-8 font-semibold text-gray-600">
               <Link href="/" className="hover:text-blue-600 transition">Find Doctors</Link>
               <Link href="/hospitals" className="hover:text-blue-600 transition">Find Hospitals</Link>
+              <Link href="/ai-assistant" className="text-blue-700 bg-blue-50 px-4 py-1 rounded-full hover:bg-blue-100 transition flex items-center gap-2">
+                 🤖 AI Assistant
+              </Link>
             </div>
           </div>
         </nav>

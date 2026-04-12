@@ -34,6 +34,16 @@ export async function getDoctorsByHospital(hospitalId: string) {
   return res.json();
 }
 
+// AI Assistant API
+export async function chatWithAI(message: string, language: string = 'en') {
+  const res = await fetch(`${BASE_URL}/ai/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, language }),
+  });
+  return res.json();
+}
+
 // Signup user
 export async function signup(data: any) {
   const res = await fetch(`${BASE_URL}/users/signup`, {
