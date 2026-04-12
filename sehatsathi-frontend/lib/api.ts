@@ -54,6 +54,19 @@ export async function uploadPrescription(file: File) {
   return res.json();
 }
 
+export async function generateOtp(phone: string) {
+  const res = await fetch(`${BASE_URL}/users/generate-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone }),
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to generate OTP");
+  }
+  return res.json();
+}
+
 // Signup user
 export async function signup(data: any) {
   const res = await fetch(`${BASE_URL}/users/signup`, {
@@ -63,7 +76,10 @@ export async function signup(data: any) {
     },
     body: JSON.stringify(data),
   });
-
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Signup failed");
+  }
   return res.json();
 }
 

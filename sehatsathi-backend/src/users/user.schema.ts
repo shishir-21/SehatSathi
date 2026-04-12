@@ -20,6 +20,13 @@ export class User {
   // Hashed password
   @Prop()
   password: string;
+
+  // Phone number
+  @Prop()
+  phone?: string;
+
+  @Prop({ default: false })
+  isPhoneVerified?: boolean;
 }
 
 // Create schema
