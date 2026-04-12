@@ -13,6 +13,27 @@ export async function getDoctorById(id: string) {
   return res.json();
 }
 
+// Hospitals APIs
+export async function getHospitals() {
+  const res = await fetch(`${BASE_URL}/hospitals`);
+  return res.json();
+}
+
+export async function getHospitalById(id: string) {
+  const res = await fetch(`${BASE_URL}/hospitals/${id}`);
+  return res.json();
+}
+
+export async function seedHospitals() {
+  const res = await fetch(`${BASE_URL}/hospitals/seed`, { method: "POST" });
+  return res.json();
+}
+
+export async function getDoctorsByHospital(hospitalId: string) {
+  const res = await fetch(`${BASE_URL}/doctors?hospitalId=${hospitalId}`);
+  return res.json();
+}
+
 // Signup user
 export async function signup(data: any) {
   const res = await fetch(`${BASE_URL}/users/signup`, {
