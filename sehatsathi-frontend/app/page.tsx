@@ -75,7 +75,6 @@ export default function Home() {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6 border-b pb-4">
         <h1 className="text-3xl font-bold text-gray-900">Available Doctors</h1>
-        <button onClick={handleLogout} className="text-sm border px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">Logout</button>
       </div>
 
       {/* Modern Search Bar */}
