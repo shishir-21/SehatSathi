@@ -44,6 +44,16 @@ export async function chatWithAI(message: string, language: string = 'en') {
   return res.json();
 }
 
+export async function uploadPrescription(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(`${BASE_URL}/ai/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  return res.json();
+}
+
 // Signup user
 export async function signup(data: any) {
   const res = await fetch(`${BASE_URL}/users/signup`, {

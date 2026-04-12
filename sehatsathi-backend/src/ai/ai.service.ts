@@ -57,4 +57,32 @@ export class AiService {
       recommendDoctor: false
     };
   }
+
+  // MOCK FASTAPI OCR BRIDGE
+  // Simulates FastAPI returning structured text extraction
+  async analyzeFile(file: any) {
+    // Artificial ML OCR extraction delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    
+    return {
+      type: "prescription", // internal tag to handle UI differentiation
+      extracted_text: "Dr. Sharma\nRx: Paracetamol 500mg - 1/day\nDiagonosis: Viral Infection",
+      problem: "Possible viral infection",
+      medicines: [
+        {
+          name: "Paracetamol 500mg",
+          use: "Reduces fever and body ache"
+        }
+      ],
+      causes: [
+        "Viral infection outbreak",
+        "Weakened immunity due to seasonal change"
+      ],
+      recovery: [
+        "Take complete rest for 2 days",
+        "Drink warm fluids frequently"
+      ],
+      warning: "Consult doctor if symptoms persist or fever exceeds 103°F"
+    };
+  }
 }
