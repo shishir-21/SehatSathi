@@ -83,7 +83,7 @@ export default function Home() {
         <div className="flex-1 relative">
           <input 
             type="text"
-            placeholder="Search by Doctor Name, Specialization or Hospital... (Type or speak)"
+            placeholder="Enter Doctor Name or Specialization... (Type or speak)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
