@@ -11,6 +11,7 @@ export default function HospitalsDirectory() {
   // Search state with debounce
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isListening, setIsListening] = useState(false);
 
   async function fetchAll() {
     try {
@@ -35,6 +36,29 @@ export default function HospitalsDirectory() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
+  const startVoiceSearch = () => {
+    // @ts-ignore
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser doesn't support Voice Search. Please use Chrome/Edge.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event: any) => {
+      const speech = event.results[0][0].transcript;
+      setSearchQuery(speech);
+      setDebouncedSearch(speech);
+      setIsListening(false);
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognition.start();
+  };
+
   const handleSeed = async () => {
     await seedHospitals();
     fetchAll();
@@ -58,14 +82,24 @@ export default function HospitalsDirectory() {
 
       {/* Modern Search Bar */}
       <div className="mb-8 flex gap-3">
-        <input 
-          type="text"
-          placeholder="Search by Hospital Name or City..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
-          className="flex-1 border border-gray-300 p-4 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 text-lg"
-        />
+        <div className="flex-1 relative">
+          <input 
+            type="text"
+            placeholder="Search by Hospital Name or City... (Type or speak)"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
+            className="w-full border border-gray-300 p-4 pr-16 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 text-lg"
+          />
+          <button 
+            type="button"
+            title="Voice Search"
+            onClick={startVoiceSearch}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full transition-colors flex items-center justify-center ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
+          >
+            🎤
+          </button>
+        </div>
         <button 
           onClick={() => setDebouncedSearch(searchQuery)}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-sm transition"
