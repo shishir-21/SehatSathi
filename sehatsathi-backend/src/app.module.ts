@@ -11,7 +11,7 @@ import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URI),
+    MongooseModule.forRoot(process.env.MONGO_URI as string),
     AuthModule,
     UsersModule,
     DoctorsModule,
