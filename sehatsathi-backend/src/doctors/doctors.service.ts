@@ -19,6 +19,15 @@ export class DoctorsService {
     return this.doctorModel.find();
   }
 
+  // Get a single doctor by ID
+  async findOne(id: string): Promise<Doctor> {
+    const doctor = await this.doctorModel.findById(id).exec();
+    if (!doctor) {
+        throw new Error('Doctor not found');
+    }
+    return doctor;
+  }
+
   // Create a new doctor (we’ll use this soon)
   async create(data: Partial<Doctor>): Promise<Doctor> {
     return this.doctorModel.create(data);
