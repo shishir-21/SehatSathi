@@ -2,19 +2,28 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { chatWithAI } from "@/lib/api";
+import { chatWithAI, uploadPrescription } from "@/lib/api";
 
 type Message = {
   _id: string;
   role: "user" | "ai";
   text?: string;
   data?: {
-    summary: string;
-    advice: string[];
-    diet: string[];
-    schedule: string[];
-    severity: "low" | "medium" | "high";
-    recommendDoctor: boolean;
+    type?: "prescription";
+    extracted_text?: string;
+    problem?: string;
+    medicines?: {name: string, use: string}[];
+    causes?: string[];
+    recovery?: string[];
+    warning?: string;
+
+    // Standard Chat Types
+    summary?: string;
+    advice?: string[];
+    diet?: string[];
+    schedule?: string[];
+    severity?: "low" | "medium" | "high";
+    recommendDoctor?: boolean;
   };
 };
 
@@ -23,6 +32,7 @@ export default function AIAssistant() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -49,6 +59,28 @@ export default function AIAssistant() {
       setMessages((prev) => [...prev, { _id: Date.now().toString(), role: "ai", text: "Sorry, the ML endpoint failed to respond." }]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const userMsg: Message = { _id: Date.now().toString(), role: "user", text: `📎 Uploaded Prescription: ${file.name}` };
+    setMessages((prev) => [...prev, userMsg]);
+    setLoading(true);
+
+    try {
+      const aiResponse = await uploadPrescription(file);
+      const aiMsg: Message = { _id: (Date.now() + 1).toString(), role: "ai", data: aiResponse };
+      setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => [...prev, { _id: Date.now().toString(), role: "ai", text: "Failed to analyze prescription." }]);
+    } finally {
+      setLoading(false);
+      // Reset input so they can upload the same file again if needed
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -88,8 +120,8 @@ export default function AIAssistant() {
           
           {messages.length === 0 && (
              <div className="text-center text-gray-500 bg-white/90 p-6 rounded-2xl max-w-sm mx-auto shadow-sm mt-10">
-                <p className="font-semibold text-lg text-gray-800">Hi! Tell me how you're feeling.</p>
-                <p className="text-sm mt-2">I can analyze your symptoms and suggest home remedies or alert you to see a doctor.</p>
+                <p className="font-semibold text-lg text-gray-800">Hi! Tell me how you're feeling or attach a prescription.</p>
+                <p className="text-sm mt-2">I can analyze your symptoms or extract details using AI.</p>
              </div>
           )}
 
@@ -105,6 +137,46 @@ export default function AIAssistant() {
                 <div className="max-w-[85%] bg-white border border-gray-200 p-5 rounded-3xl rounded-tl-sm shadow-md text-gray-800">
                    {msg.text ? (
                      <p>{msg.text}</p>
+                   ) : msg.data?.type === "prescription" ? (
+                     <div className="space-y-4">
+                        <div className="bg-purple-100 text-purple-900 p-3 rounded-xl font-bold flex flex-col gap-1 border border-purple-300">
+                           <span className="flex items-center gap-2">📄 PRESCRIPTION ANALYZED</span>
+                           <span className="text-sm font-normal"><span className="font-bold">Detected Issue:</span> {msg.data.problem}</span>
+                        </div>
+                        
+                        <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+                           <h4 className="text-xs font-bold text-gray-500 uppercase mb-1">OCR Extracted Text</h4>
+                           <p className="text-xs text-gray-600 whitespace-pre-wrap font-mono">{msg.data.extracted_text}</p>
+                        </div>
+
+                        <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                           <h4 className="font-bold text-blue-900 mb-2 border-b border-blue-200 pb-1">💊 Medicines Identified</h4>
+                           <ul className="list-disc pl-4 text-sm text-blue-800 space-y-2">
+                             {msg.data.medicines?.map((med, i) => (
+                               <li key={i}><span className="font-bold">{med.name}:</span> {med.use}</li>
+                             ))}
+                           </ul>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                             <h4 className="font-bold text-orange-900 mb-2 border-b border-orange-200 pb-1">🔍 Possible Causes</h4>
+                             <ul className="list-disc pl-4 text-sm text-orange-800 space-y-1">
+                               {msg.data.causes?.map((item, i) => <li key={i}>{item}</li>)}
+                             </ul>
+                           </div>
+                           <div className="bg-green-50 p-4 rounded-xl border border-green-100">
+                             <h4 className="font-bold text-green-900 mb-2 border-b border-green-200 pb-1">❤️ Recovery Routine</h4>
+                             <ul className="list-disc pl-4 text-sm text-green-800 space-y-1">
+                               {msg.data.recovery?.map((item, i) => <li key={i}>{item}</li>)}
+                             </ul>
+                           </div>
+                        </div>
+
+                        <div className="mt-3 text-sm text-red-600 font-bold bg-red-50 p-3 rounded-lg border border-red-100">
+                           ⚠️ {msg.data.warning}
+                        </div>
+                     </div>
                    ) : msg.data ? (
                      <div className="space-y-4">
                         {/* Severity Banner */}
@@ -194,13 +266,29 @@ export default function AIAssistant() {
 
           <form 
             onSubmit={(e) => { e.preventDefault(); handleSend(input); }} 
-            className="flex gap-2"
+            className="flex gap-2 items-center"
           >
+            <input 
+              type="file" 
+              accept="image/*,application/pdf" 
+              ref={fileInputRef} 
+              className="hidden" 
+              onChange={handleFileUpload}
+            />
+            <button 
+               type="button" 
+               onClick={() => fileInputRef.current?.click()}
+               disabled={loading}
+               className="bg-gray-100 text-gray-600 w-14 h-14 rounded-full flex justify-center items-center shadow-sm hover:bg-gray-200 transition disabled:opacity-50 text-xl"
+               title="Upload Prescription"
+            >
+               📎
+            </button>
             <input 
                type="text" 
                value={input}
                onChange={(e) => setInput(e.target.value)}
-               placeholder="Describe your symptoms (e.g. fever and dry cough)..." 
+               placeholder="Describe your symptoms or upload prescription..." 
                disabled={loading}
                className="flex-1 bg-gray-100 text-gray-900 px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
             />
@@ -216,7 +304,7 @@ export default function AIAssistant() {
       </div>
 
       {/* RIGHT: Health Tracker Profile */}
-      <div className="w-full md:w-80 bg-white border border-gray-200 rounded-3xl p-6 shadow-sm flex flex-col h-full overflow-y-auto">
+      <div className="w-full md:w-80 bg-white border border-gray-200 rounded-3xl p-6 shadow-sm flex flex-col h-full overflow-y-auto hidden md:flex">
          <h3 className="text-xl font-bold text-gray-800 border-b pb-4 mb-6">🩺 Health Tracker</h3>
          
          <div className="space-y-6">
