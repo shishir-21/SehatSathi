@@ -17,6 +17,9 @@ export class Doctor {
 
   @Prop()
   rating: number;
+
+  @Prop({ type: [String], default: ['online', 'offline'] })
+  consultationModes: string[];
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);
