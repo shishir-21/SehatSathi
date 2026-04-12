@@ -91,7 +91,7 @@ export default function Home() {
       </div>
 
       {/* Online Consultation Booking UI */}
-      <div className="mb-8 p-4 border rounded bg-blue-50">
+      <div className="mb-8 p-4 border rounded bg-blue-900 border-blue-800 text-white">
         <h2 className="text-lg font-semibold mb-3">1. Configure Your Appointment</h2>
         <div className="flex gap-4 flex-wrap">
           <div>
@@ -99,7 +99,7 @@ export default function Home() {
             <select 
               value={consultationType} 
               onChange={(e) => setConsultationType(e.target.value)}
-              className="border border-gray-300 p-2 rounded bg-white w-full"
+              className="border border-gray-300 p-2 rounded bg-white text-gray-900 w-full"
             >
               <option value="online">Online Consultation</option>
               <option value="offline">Clinic Visit</option>
@@ -111,7 +111,7 @@ export default function Home() {
               type="date" 
               value={selectedDate} 
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="border border-gray-300 p-2 rounded bg-white w-full"
+              className="border border-gray-300 p-2 rounded bg-white text-gray-900 w-full"
             />
           </div>
           <div>
@@ -119,7 +119,7 @@ export default function Home() {
             <select 
               value={selectedTime} 
               onChange={(e) => setSelectedTime(e.target.value)}
-              className="border border-gray-300 p-2 rounded bg-white w-full"
+              className="border border-gray-300 p-2 rounded bg-white text-gray-900 w-full"
             >
               <option value="">-- Choose Slot --</option>
               <option value="09:00 AM">09:00 AM</option>
