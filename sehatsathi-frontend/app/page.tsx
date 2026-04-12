@@ -13,6 +13,10 @@ export default function Home() {
   const [selectedTime, setSelectedTime] = useState("");
   const [consultationType, setConsultationType] = useState("online");
   
+  // Search state with debounce
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  
   const router = useRouter();
 
   // 1. Fetch doctors on load
@@ -29,6 +33,14 @@ export default function Home() {
     }
     fetchDoctors();
   }, []);
+
+  // Debounce effect logic
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // 2. Handle Booking Logic
   const handleBooking = async (doctorId: string) => {
@@ -90,6 +102,17 @@ export default function Home() {
         <button onClick={handleLogout} className="text-sm border px-3 py-1 bg-red-50 text-red-600 rounded">Logout</button>
       </div>
 
+      {/* Modern Search Bar */}
+      <div className="mb-6">
+        <input 
+          type="text"
+          placeholder="Search by Doctor Name or Hospital..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+        />
+      </div>
+
       {/* Online Consultation Booking UI */}
       <div className="mb-8 p-4 border rounded bg-blue-900 border-blue-800 text-white">
         <h2 className="text-lg font-semibold mb-3">1. Configure Your Appointment</h2>
@@ -138,7 +161,13 @@ export default function Home() {
 
       <h2 className="text-lg font-semibold mb-3">2. Select a Doctor</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {doctors.map((doc: any) => (
+        {doctors
+          .filter((doc: any) => 
+            doc.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+            doc.specialization?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            doc.location?.toLowerCase().includes(debouncedSearch.toLowerCase())
+          )
+          .map((doc: any) => (
           <div key={doc._id} className="border p-4 rounded-lg shadow-sm bg-white hover:shadow-md transition">
             <h2 className="text-xl font-semibold text-blue-900">{doc.name}</h2>
             <p className="text-gray-600 font-medium mb-1">{doc.specialization}</p>
