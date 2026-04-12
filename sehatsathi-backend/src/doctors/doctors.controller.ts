@@ -1,5 +1,5 @@
 // Import required decorators
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 
 // Import service (business logic layer)
 import { DoctorsService } from './doctors.service';
@@ -14,8 +14,8 @@ export class DoctorsController {
   // GET /doctors
   // Fetch all doctors from database
   @Get()
-  async getDoctors() {
-    return this.doctorsService.findAll();
+  async getDoctors(@Query('hospitalId') hospitalId?: string) {
+    return this.doctorsService.findAll(hospitalId);
   }
 
   // GET /doctors/:id

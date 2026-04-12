@@ -14,8 +14,11 @@ export class DoctorsService {
     private doctorModel: Model<DoctorDocument>,
   ) {}
 
-  // Get all doctors from database
-  async findAll(): Promise<Doctor[]> {
+  // Get all doctors from database (optionally filtered by hospital)
+  async findAll(hospitalId?: string): Promise<Doctor[]> {
+    if (hospitalId) {
+      return this.doctorModel.find({ hospitalId });
+    }
     return this.doctorModel.find();
   }
 

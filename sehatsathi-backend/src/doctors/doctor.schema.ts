@@ -26,6 +26,9 @@ export class Doctor {
 
   @Prop({ type: [String] })
   qualifications: string[];
+
+  @Prop()
+  hospitalId: string;
 }
 
 export const DoctorSchema = SchemaFactory.createForClass(Doctor);
