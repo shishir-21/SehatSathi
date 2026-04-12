@@ -103,14 +103,21 @@ export default function Home() {
       </div>
 
       {/* Modern Search Bar */}
-      <div className="mb-6">
+      <div className="mb-6 flex gap-2">
         <input 
           type="text"
           placeholder="Search by Doctor Name or Hospital..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+          onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
+          className="flex-1 border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
         />
+        <button 
+          onClick={() => setDebouncedSearch(searchQuery)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-sm transition"
+        >
+          Search
+        </button>
       </div>
 
       {/* Online Consultation Booking UI */}
