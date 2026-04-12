@@ -18,21 +18,16 @@ export class AppointmentsService {
 
   // Create new appointment
   async create(data: any): Promise<Appointment> {
-
-    // Check if slot already booked (prevent double booking)
-    const existing = await this.appointmentModel.findOne({
-      doctorId: data.doctorId,
-      date: data.date,
-      timeSlot: data.timeSlot,
-    });
-
-    // If already booked → throw error
-    if (existing) {
-      throw new BadRequestException('Slot already booked');
+    try {
+      // Create appointment directly. The compound unique index atomically prevents double booking.
+      return await this.appointmentModel.create(data);
+    } catch (error: any) {
+      // E11000 duplicate key error means the slot is taken
+      if (error.code === 11000) {
+        throw new BadRequestException('Slot already booked');
+      }
+      throw error;
     }
-
-    // Otherwise create appointment
-    return this.appointmentModel.create(data);
   }
 
   // Get all appointments
