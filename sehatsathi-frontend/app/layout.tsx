@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import AuthNav from "./components/AuthNav";
+import NavigationLinks from "./components/NavigationLinks";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,13 +39,7 @@ export default function RootLayout({
               MediBrain
             </Link>
             <div className="flex items-center gap-6">
-              <div className="hidden md:flex gap-8 font-semibold text-gray-600 items-center">
-                <Link href="/" className="hover:text-blue-600 transition">Find Doctors</Link>
-                <Link href="/hospitals" className="hover:text-blue-600 transition">Find Hospitals</Link>
-                <Link href="/ai-assistant" className="text-blue-700 bg-blue-50 px-4 py-1 rounded-full hover:bg-blue-100 transition flex items-center gap-2">
-                   🤖 AI Assistant
-                </Link>
-              </div>
+              <NavigationLinks />
               <AuthNav />
             </div>
           </div>
@@ -51,7 +47,9 @@ export default function RootLayout({
         
         {/* Page Content */}
         <main className="flex-1">
-          {children}
+          <ProtectedRoute>
+            {children}
+          </ProtectedRoute>
         </main>
       </body>
     </html>
