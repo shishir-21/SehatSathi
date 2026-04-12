@@ -7,6 +7,12 @@ export async function getDoctors() {
   return res.json();
 }
 
+// Fetch single doctor
+export async function getDoctorById(id: string) {
+  const res = await fetch(`${BASE_URL}/doctors/${id}`);
+  return res.json();
+}
+
 // Signup user
 export async function signup(data: any) {
   const res = await fetch(`${BASE_URL}/users/signup`, {
