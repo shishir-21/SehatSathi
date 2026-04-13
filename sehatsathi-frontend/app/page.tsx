@@ -137,16 +137,22 @@ export default function Home() {
           );
         }
 
+        // Simple english comment: Define desired order to match request roughly
+        const order = ["General Physician", "Cardiologist", "Dermatologist", "Pediatrician", "Gynecologist", "Neurologist", "Psychiatrist", "Orthopedician"];
+
         // Simple english comment: Group the filtered doctors by their specialization
         const grouped: { [key: string]: any[] } = {};
+        
+        // Simple english comment: Ensure all requested specialist sections ALWAYS appear
+        for (const section of order) {
+           grouped[section] = [];
+        }
+
         for (const doc of filteredDoctors) {
           const spec = doc.specialization || "Other";
           if (!grouped[spec]) grouped[spec] = [];
           grouped[spec].push(doc);
         }
-
-        // Simple english comment: Define desired order to match request roughly
-        const order = ["General Physician", "Cardiologist", "Dermatologist", "Pediatrician", "Gynecologist", "Neurologist", "Psychiatrist", "Orthopedician"];
         
         // Sort keys based on requested order, pushing unlisted ones to the end
         const sortedSpecs = Object.keys(grouped).sort((a, b) => {
@@ -168,42 +174,48 @@ export default function Home() {
             </div>
             
             <div className={styles.scrollContainer}>
-              {grouped[spec].map((doc: any) => (
-                <div key={doc._id} className={styles.card}>
-                  <div>
-                    {/* Profile Image Banner */}
-                    <div className={styles.cardHeader}>
-                      {doc.photoUrl ? (
-                         <img src={doc.photoUrl} alt={doc.name} className={styles.avatar} />
-                      ) : (
-                         <div className={styles.avatarFallback}>👨‍⚕️</div>
-                      )}
-                      <div>
-                        <h3 className={styles.docName}>{doc.name}</h3>
-                        <p className={styles.docSpec}>{doc.specialization}</p>
+              {grouped[spec].length === 0 ? (
+                 <div style={{ color: '#94a3b8', fontStyle: 'italic', padding: '1rem' }}>
+                   No doctors available in this specialization yet.
+                 </div>
+              ) : (
+                grouped[spec].map((doc: any) => (
+                  <div key={doc._id} className={styles.card}>
+                    <div>
+                      {/* Profile Image Banner */}
+                      <div className={styles.cardHeader}>
+                        {doc.photoUrl ? (
+                           <img src={doc.photoUrl} alt={doc.name} className={styles.avatar} />
+                        ) : (
+                           <div className={styles.avatarFallback}>👨‍⚕️</div>
+                        )}
+                        <div>
+                          <h3 className={styles.docName}>{doc.name}</h3>
+                          <p className={styles.docSpec}>{doc.specialization}</p>
+                        </div>
+                      </div>
+                      
+                      <div className={styles.cardMeta}>
+                         <span className={styles.ratingBadge}>⭐ {doc.rating || 'N/A'}</span>
+                         {doc.consultationModes && (
+                            <span className={styles.modeBadge}>
+                               {doc.consultationModes.includes('online') ? 'Online Avail' : 'In-Person'}
+                            </span>
+                         )}
                       </div>
                     </div>
                     
-                    <div className={styles.cardMeta}>
-                       <span className={styles.ratingBadge}>⭐ {doc.rating || 'N/A'}</span>
-                       {doc.consultationModes && (
-                          <span className={styles.modeBadge}>
-                             {doc.consultationModes.includes('online') ? 'Online Avail' : 'In-Person'}
-                          </span>
-                       )}
-                    </div>
+                    {/* View Profile Action */}
+                    <Link 
+                      href={`/doctor/${doc._id}`}
+                      target="_blank"
+                      className={styles.bookBtn}
+                    >
+                      View Profile & Book
+                    </Link>
                   </div>
-                  
-                  {/* View Profile Action */}
-                  <Link 
-                    href={`/doctor/${doc._id}`}
-                    target="_blank"
-                    className={styles.bookBtn}
-                  >
-                    View Profile & Book
-                  </Link>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         ));
