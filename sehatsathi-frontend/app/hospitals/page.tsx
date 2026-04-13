@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getHospitals, seedHospitals } from "@/lib/api";
+import styles from "./hospitals.module.css";
 
 export default function HospitalsDirectory() {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   // Search state with debounce
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,94 +62,104 @@ export default function HospitalsDirectory() {
   };
 
   const handleSeed = async () => {
-    await seedHospitals();
-    fetchAll();
+    try {
+      setIsSeeding(true);
+      await seedHospitals();
+      await fetchAll();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSeeding(false);
+    }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading Hospitals...</div>;
+  if (loading) return <div className={styles.loader}>Injecting modern aesthetics... Loading Hospitals...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6 mt-8">
-      <div className="flex justify-between items-center mb-8 border-b pb-4">
-         <div>
-           <h1 className="text-3xl font-bold text-gray-900">Hospitals in India</h1>
-           <p className="text-gray-500 mt-2">Find the best care facilities and their respective specialists.</p>
+    <div className={styles.container}>
+      <header className={styles.header}>
+         <div className={styles.titleGroup}>
+           <h1 className={styles.title}>Hospitals in India</h1>
+           <p className={styles.subtitle}>Find the best care facilities and their respective specialists.</p>
          </div>
-         {hospitals.length === 0 && (
-            <button onClick={handleSeed} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
-              Load Test Hospitals
-            </button>
-         )}
-      </div>
+      </header>
 
       {/* Modern Search Bar */}
-      <div className="mb-8 flex gap-3">
-        <div className="flex-1 relative">
+      <div className={styles.searchContainer}>
+        <div className={styles.inputWrapper}>
           <input 
             type="text"
             placeholder="Search by Hospital Name or City... (Type or speak)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
-            className="w-full border border-gray-300 p-4 pr-16 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 text-lg"
+            className={styles.searchInput}
           />
           <button 
             type="button"
             title="Voice Search"
             onClick={startVoiceSearch}
-            className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full transition-colors flex items-center justify-center ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
+            className={`${styles.micBtn} ${isListening ? styles.micBtnActive : ''}`}
           >
             🎤
           </button>
         </div>
         <button 
           onClick={() => setDebouncedSearch(searchQuery)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-sm transition"
+          className={styles.searchBtn}
         >
           Search
         </button>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className={styles.grid}>
         {hospitals
           .filter((hosp: any) => 
             hosp.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
             hosp.location?.toLowerCase().includes(debouncedSearch.toLowerCase())
           )
           .map((hosp: any) => (
-          <div key={hosp._id} className="border border-gray-200 rounded-2xl shadow-sm bg-white hover:shadow-lg overflow-hidden flex flex-col transition h-full text-gray-800">
-             {/* Hospital Image */}
-             <div 
-               className="h-48 w-full bg-cover bg-center" 
-               style={{ backgroundImage: `url(${hosp.image || 'https://via.placeholder.com/800'})` }} 
-             />
+          <div key={hosp._id} className={styles.card}>
+             <div className={styles.imageWrapper}>
+               <div 
+                 className={styles.cardImage} 
+                 style={{ backgroundImage: `url(${hosp.image || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80'})` }} 
+               />
+             </div>
              
-             <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                   <h2 className="text-2xl font-bold text-blue-900">{hosp.name}</h2>
-                   <p className="text-gray-500 font-medium mb-3 flex items-center gap-1">📍 {hosp.location}</p>
-                   <span className="bg-yellow-100 text-yellow-800 font-bold px-3 py-1 rounded-full text-sm inline-block mb-4">
-                      ⭐ {hosp.rating} Rating
-                   </span>
-                   <p className="text-sm text-gray-600 line-clamp-3 mb-6">{hosp.description}</p>
-                </div>
-                
-                <Link 
-                  href={`/hospitals/${hosp._id}`}
-                  className="mt-auto block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition"
-                >
-                  View Details & Doctors
-                </Link>
+             <div className={styles.cardContent}>
+                 <h2 className={styles.hospName}>{hosp.name}</h2>
+                 <p className={styles.locationContainer}>
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                   {hosp.location}
+                 </p>
+                 <span className={styles.ratingBadge}>
+                    ⭐ {hosp.rating}
+                 </span>
+                 <p className={styles.description}>{hosp.description}</p>
+                 
+                 <Link 
+                   href={`/hospitals/${hosp._id}`}
+                   className={styles.bookBtn}
+                 >
+                   View Details & Doctors
+                 </Link>
              </div>
           </div>
         ))}
+        {hospitals.length === 0 && (
+          <div className={styles.emptyState}>
+             <svg style={{margin: '0 auto', marginBottom: '1rem', color: '#94a3b8'}} width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+               <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+             </svg>
+             <h3 style={{color: '#334155', marginBottom: '0.5rem'}}>No Hospitals Active</h3>
+             <p style={{color: '#64748b', marginBottom: '1rem'}}>There are no facilities loaded in the system right now.</p>
+             <button onClick={handleSeed} disabled={isSeeding} className={styles.seedAction}>
+               {isSeeding ? "Loading..." : "Load Test Hospitals ✨"}
+             </button>
+          </div>
+        )}
       </div>
-      
-      {hospitals.length === 0 && (
-         <div className="text-center py-20 text-gray-400">
-            No Hospitals active. Click 'Load Test Hospitals' above!
-         </div>
-      )}
     </div>
   );
 }
