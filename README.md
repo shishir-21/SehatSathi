@@ -1,60 +1,197 @@
-# 🏥 MediBrain Platform (v1.0.0)
+# 🧠 MediBrain
 
-**MediBrain** (formerly SehatSathi) is a scalable, production-ready healthcare telemedicine ecosystem. It connects patients directly to leading hospitals, specialized practitioners, and a powerful AI Health Assistant for instant symptom or prescription assessment. 
+🚀 AI-Powered Healthcare Assistant & Telemedicine Platform  
 
-Welcome to our official release **Version 1.0.0**! 🎉
-
----
-
-## 🌟 Key Features
-- **Intelligent AI Health Assistant**: A WhatsApp-style automated assistant capable of severity-ranking user symptoms (Low/Medium/High).
-- **Prescription OCR Parsing**: Upload images or PDFs of medical prescriptions. The integrated backend parser breaks down medicines, causes, and active recovery routines via simulated FastAPI hooks.
-- **2-Step Authentication & Protected Routes**: Clean, Glassmorphic split-screen login interfaces secured tightly by backend **OTP Generation & Verification** APIs. Unauthenticated users are strictly barred from core features.
-- **Hospital & Doctor Directories**: Find top-rated hospitals. Navigate locally using voice-search and instantaneous text-debouncing.
-- **Atomic Appointment Booking**: Real-time telemedicine appointments leveraging DB-level unique constraints to prevent double booking.
+🔗 Live App: https://sehat-sathi-alpha.vercel.app/login  
 
 ---
 
-## 🏗️ Architecture Stack
-The platform uses a clean, modular monolith approach bridging Next-gen UI with severe backend schema checks.
-- **Backend**: NestJS (v11) + Typescript
-- **Database**: MongoDB (Mongoose ORM)
-- **Frontend**: Next.js 16.2 (App Router) + React 19 + TailwindCSS Vanilla + Custom React Engine
-- **Authentication**: JWT & Simulated SMS OTP Gateway
+## 📌 Overview
+
+**MediBrain** is a full-stack healthcare platform that combines **AI assistance + doctor booking + health tracking** into one seamless experience.
+
+It helps users:
+- Find doctors & hospitals
+- Book appointments
+- Get AI-based health guidance
+- Track symptoms & vitals
 
 ---
 
-## 📂 Project Structure
-1. `/sehatsathi-backend` - The NestJS API Server (Default Port: `3000`)
-2. `/sehatsathi-frontend` - The Next.js Premium Client UI (Default Port: `3001` or `3000` via build configs)
+## ✨ Features
+
+### 👨‍⚕️ Doctor Discovery
+- Search doctors by specialization
+- View ratings and availability
+- Book appointments instantly
+
+### 🏥 Hospital Explorer
+- Browse hospitals across India
+- View hospital details and services
+- Explore associated doctors
+
+### 📅 Appointment Booking
+- Slot-based scheduling
+- Real-time booking system
+- Prevents double booking
+
+### 🤖 AI Health Assistant
+- Symptom-based guidance
+- Recovery suggestions
+- Diet & lifestyle advice
+- Multi-language support (future-ready)
+
+### 📊 Health Tracker
+- Track temperature
+- Add symptoms
+- Store medicines
+- Monitor health progress
+
+---
+
+## 🧠 AI Capabilities (Current)
+
+- Fever / cold / headache analysis  
+- Basic health recommendations  
+- Suggest when to consult a doctor  
+- Smart conversational interface  
+
+---
+
+## 🔮 Upcoming Features
+
+- 📸 Prescription upload & AI analysis  
+- 🧾 MRI / medical report interpretation  
+- 🔔 Smart reminders (medicine & vitals)  
+- 📹 Video consultation  
+- 💳 Payment integration  
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+- Next.js / React
+- Tailwind CSS
+
+### Backend
+- NestJS
+- REST API architecture
+
+### Database
+- MongoDB Atlas
+
+### Deployment
+- Frontend → Vercel  
+- Backend → Render  
+
+---
+
+## 🔗 Architecture
+
+```
+Frontend (Next.js)
+↓
+Backend (NestJS API)
+↓
+MongoDB Atlas
+```
+
+---
+
+## 🔐 Authentication
+
+- JWT-based authentication  
+- Secure API endpoints  
+- Environment-based configuration  
+
+---
+
+## ⚙️ Environment Variables
+
+### Backend (Render)
+
+```env
+MONGO_URI=your_mongodb_connection_string
+PORT=10000
+JWT_SECRET=your_secret
+```
+
+### Frontend (Vercel)
+
+```env
+NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com
+```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
-Ensure you have the following installed to run `v1.0.0` securely:
-- Node.js (v20+)
-- MongoDB (Running locally at `mongodb://localhost:27017/sehatsathi`)
+### 1. Clone Repo
 
-### 2. Running The Backend
 ```bash
-cd sehatsathi-backend
-npm install
-npm run start:dev
+git clone https://github.com/shishir-21/SehatSathi.git
+cd SehatSathi
 ```
-> *Tip: Ensure you run `POST /hospitals/seed` from an API tool if your DB is empty!*
 
-### 3. Running The Frontend
+### 2. Install Dependencies
+
 ```bash
-cd sehatsathi-frontend
 npm install
+```
+
+### 3. Run Backend
+
+```bash
+npm run start
+```
+
+### 4. Run Frontend
+
+```bash
 npm run dev
 ```
 
 ---
 
-## 🧾 Development Principles
-- **Git Workflow**: Strict atomic commits per feature (e.g. `feat: xyz`, `fix: xyz`, `style: xyz`).
-- **Dynamic UX**: Utilizing smooth UI boundaries, bouncy loaders, alert pills, and global layout hooks.
-- **The Phase-Based Scaling**: We have officially closed **Phase 1 MVP**, successfully launching `v1.0.0`. Future maps are set toward distributed Python/Redis Microservices!
+## 📡 API Endpoints
+
+- `/auth/login`
+- `/users/signup`
+- `/doctors`
+- `/hospitals`
+- `/appointments`
+- `/ai/chat`
+
+---
+
+## 🛠️ Improvements in v1.0.0
+
+- Production-ready deployment  
+- MongoDB Atlas integration  
+- Fixed localhost DB issues  
+- Added CORS support  
+- Stable API connections  
+
+---
+
+## 🎯 Future Vision
+
+MediBrain aims to become a **complete AI healthcare ecosystem**:
+- Personal AI nurse 🧠  
+- Smart diagnostics ⚡  
+- Remote healthcare access 🌍  
+
+---
+
+## 👨‍💻 Author
+
+**Shishir Mahato**  
+B.Tech CSE (Data Science)  
+Full Stack + AI Developer  
+
+---
+
+## ⭐ Support
+
+If you like this project, give it a ⭐ on GitHub!
