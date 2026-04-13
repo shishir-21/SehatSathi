@@ -6,7 +6,7 @@ import { getHospitals, seedHospitals } from "@/lib/api";
 import styles from "./hospitals.module.css";
 
 export default function HospitalsDirectory() {
-  const [hospitals, setHospitals] = useState([]);
+  const [hospitals, setHospitals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
 

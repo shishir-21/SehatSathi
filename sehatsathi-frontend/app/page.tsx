@@ -7,7 +7,7 @@ import { getDoctors, seedDoctors } from "@/lib/api";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Search state with debounce
