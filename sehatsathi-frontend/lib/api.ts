@@ -13,6 +13,11 @@ export async function getDoctorById(id: string) {
   return res.json();
 }
 
+export async function seedDoctors() {
+  const res = await fetch(`${BASE_URL}/doctors/seed`, { method: "POST" });
+  return res.json();
+}
+
 // Hospitals APIs
 export async function getHospitals() {
   const res = await fetch(`${BASE_URL}/hospitals`);

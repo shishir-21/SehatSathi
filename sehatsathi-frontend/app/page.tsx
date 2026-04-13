@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getDoctors } from "@/lib/api";
+import { getDoctors, seedDoctors } from "@/lib/api";
+import styles from "./page.module.css";
 
 export default function Home() {
   const [doctors, setDoctors] = useState([]);
@@ -13,21 +14,23 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
   
   const router = useRouter();
 
+  const fetchDoctors = async () => {
+    try {
+      const data = await getDoctors();
+      setDoctors(data);
+    } catch (error) {
+      console.error("Failed to fetch doctors:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch doctors on load
   useEffect(() => {
-    async function fetchDoctors() {
-      try {
-        const data = await getDoctors();
-        setDoctors(data);
-      } catch (error) {
-        console.error("Failed to fetch doctors:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchDoctors();
   }, []);
 
@@ -62,50 +65,55 @@ export default function Home() {
     recognition.start();
   };
 
-  // Simple Logout Helper
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    alert("Logged out!");
-    router.refresh();
+  const handleSeed = async () => {
+    try {
+      setIsSeeding(true);
+      await seedDoctors();
+      await fetchDoctors();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSeeding(false);
+    }
   };
 
-  if (loading) return <div className="p-6">Loading doctors...</div>;
+  if (loading) return <div className={styles.loader}>Injecting modern aesthetics... Loading doctors...</div>;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
-        <h1 className="text-3xl font-bold text-gray-900">Available Doctors</h1>
-      </div>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Available Doctors</h1>
+      </header>
 
       {/* Modern Search Bar */}
-      <div className="mb-8 flex gap-3">
-        <div className="flex-1 relative">
+      <div className={styles.searchContainer}>
+        <div className={styles.inputWrapper}>
           <input 
             type="text"
-            placeholder="Enter Doctor Name or Specialization... (Type or speak)"
+            placeholder="Search by Name, Specialization, or Speciality..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') setDebouncedSearch(searchQuery); }}
-            className="w-full border border-gray-300 p-4 pr-16 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 text-lg"
+            className={styles.searchInput}
           />
           <button 
             type="button"
             title="Voice Search"
             onClick={startVoiceSearch}
-            className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full transition-colors flex items-center justify-center ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
+            className={`${styles.micBtn} ${isListening ? styles.micBtnActive : ''}`}
           >
             🎤
           </button>
         </div>
         <button 
           onClick={() => setDebouncedSearch(searchQuery)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-sm transition"
+          className={styles.searchBtn}
         >
           Search
         </button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className={styles.grid}>
         {doctors
           .filter((doc: any) => 
             doc.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
@@ -113,25 +121,25 @@ export default function Home() {
             doc.location?.toLowerCase().includes(debouncedSearch.toLowerCase())
           )
           .map((doc: any) => (
-          <div key={doc._id} className="border border-gray-200 p-6 rounded-2xl shadow-sm bg-white hover:shadow-lg transition flex flex-col justify-between h-full">
+          <div key={doc._id} className={styles.card}>
             <div>
               {/* Profile Image Banner */}
-              <div className="flex items-center gap-4 mb-4 pb-4 border-b">
+              <div className={styles.cardHeader}>
                 {doc.photoUrl ? (
-                   <img src={doc.photoUrl} alt={doc.name} className="w-16 h-16 rounded-full object-cover border" />
+                   <img src={doc.photoUrl} alt={doc.name} className={styles.avatar} />
                 ) : (
-                   <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-2xl border">👨‍⚕️</div>
+                   <div className={styles.avatarFallback}>👨‍⚕️</div>
                 )}
                 <div>
-                  <h2 className="text-xl font-bold text-blue-900">{doc.name}</h2>
-                  <p className="text-gray-600 font-medium">{doc.specialization}</p>
+                  <h2 className={styles.docName}>{doc.name}</h2>
+                  <p className={styles.docSpec}>{doc.specialization}</p>
                 </div>
               </div>
               
-              <div className="flex justify-between items-center text-sm text-gray-700 mb-6">
-                 <span className="font-semibold bg-gray-100 px-3 py-1 rounded-full">⭐ {doc.rating || 'N/A'} Rating</span>
+              <div className={styles.cardMeta}>
+                 <span className={styles.ratingBadge}>⭐ {doc.rating || 'N/A'}</span>
                  {doc.consultationModes && (
-                    <span className="bg-green-50 text-green-700 font-semibold px-3 py-1 rounded-full">
+                    <span className={styles.modeBadge}>
                        {doc.consultationModes.includes('online') ? 'Online Avail' : 'In-Person'}
                     </span>
                  )}
@@ -142,16 +150,24 @@ export default function Home() {
             <Link 
               href={`/doctor/${doc._id}`}
               target="_blank"
-              className="mt-auto block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition"
+              className={styles.bookBtn}
             >
               View Profile & Book
             </Link>
           </div>
         ))}
+
         {/* Empty State */}
         {doctors.length === 0 && (
-            <div className="col-span-full py-12 text-center text-gray-500">
-               No doctors available right now. Please check back later!
+            <div className={styles.emptyState}>
+               <svg style={{margin: '0 auto', marginBottom: '1rem', color: '#94a3b8'}} width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+               </svg>
+               <h3 style={{color: '#334155', marginBottom: '0.5rem'}}>No Doctors Found</h3>
+               <p style={{color: '#64748b', marginBottom: '1rem'}}>There are no specialists available at the moment.</p>
+               <button onClick={handleSeed} disabled={isSeeding} className={styles.seedAction}>
+                 {isSeeding ? "Seeding..." : "Start Seeding Mock Data ✨"}
+               </button>
             </div>
         )}
       </div>

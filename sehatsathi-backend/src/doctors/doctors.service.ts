@@ -22,6 +22,11 @@ export class DoctorsService {
     return this.doctorModel.find();
   }
 
+  // Count to prevent duplicate seeds
+  async count(): Promise<number> {
+    return this.doctorModel.countDocuments();
+  }
+
   // Get a single doctor by ID
   async findOne(id: string): Promise<Doctor> {
     const doctor = await this.doctorModel.findById(id).exec();
