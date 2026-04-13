@@ -27,6 +27,11 @@ export class DoctorsService {
     return this.doctorModel.countDocuments();
   }
 
+  // Clear all doctors (useful for re-seeding)
+  async clearAll(): Promise<void> {
+    await this.doctorModel.deleteMany({});
+  }
+
   // Get a single doctor by ID
   async findOne(id: string): Promise<Doctor> {
     const doctor = await this.doctorModel.findById(id).exec();
