@@ -10,7 +10,7 @@ async function bootstrap() {
 
   // Allow frontend to access backend
   app.enableCors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3001",
+    origin: '*',
   });
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');
