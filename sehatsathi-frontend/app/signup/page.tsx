@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignupPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", otp: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", otp: "" });
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
@@ -14,7 +14,7 @@ export default function SignupPage() {
 
   async function handleSendOTP(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password || !form.phone) return alert("Fill all fields");
+    if (!form.name || !form.email || !form.password) return alert("Fill all fields");
     
     try {
       setLoading(true);
@@ -81,16 +81,7 @@ export default function SignupPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Phone Number</label>
-                  <input
-                    type="tel"
-                    required
-                    className="w-full px-5 py-4 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-sm"
-                    placeholder="+91 9876543210"
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  />
-                </div>
+
 
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
