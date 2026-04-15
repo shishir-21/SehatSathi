@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", otp: "" });
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
   const router = useRouter();
 
@@ -17,12 +18,24 @@ export default function SignupPage() {
     
     try {
       setLoading(true);
-      await generateOtp(form.phone);
+      await generateOtp(form.email);
       setStep(2); // Move to OTP visual step
     } catch (err: any) {
       alert("Failed to send OTP: " + err.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleResendOTP() {
+    try {
+      setResendLoading(true);
+      await generateOtp(form.email);
+      alert("A new verification code has been sent to your email!");
+    } catch (err: any) {
+      alert("Failed to resend OTP: " + err.message);
+    } finally {
+      setResendLoading(false);
     }
   }
 
@@ -51,7 +64,7 @@ export default function SignupPage() {
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">{step === 1 ? 'Join MediBrain' : 'Secure Verification'}</h2>
             <p className="text-gray-500 font-medium">
-               {step === 1 ? 'Your personal, AI-driven healthcare ecosystem.' : 'We sent a 6-digit code to your phone. (Mock: 123456)'}
+               {step === 1 ? 'Your personal, AI-driven healthcare ecosystem.' : `We sent a 6-digit code to ${form.email}`}
             </p>
           </div>
 
@@ -128,15 +141,25 @@ export default function SignupPage() {
                 <div className="flex flex-col gap-3 pt-4">
                    <button
                      type="submit"
-                     disabled={loading}
+                     disabled={loading || resendLoading}
                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition shadow-md disabled:bg-blue-400"
                    >
                      {loading ? "Verifying..." : "Verify & Create Account"}
                    </button>
+
+                   <button
+                     type="button"
+                     onClick={handleResendOTP}
+                     disabled={resendLoading || loading}
+                     className="w-full bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition disabled:opacity-50"
+                   >
+                     {resendLoading ? "Resending..." : "Resend OTP"}
+                   </button>
+
                    <button
                      type="button"
                      onClick={() => setStep(1)}
-                     disabled={loading}
+                     disabled={loading || resendLoading}
                      className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 font-bold py-4 rounded-xl transition disabled:opacity-50"
                    >
                      Back to Edit Details
@@ -169,3 +192,4 @@ export default function SignupPage() {
     </div>
   );
 }
+
