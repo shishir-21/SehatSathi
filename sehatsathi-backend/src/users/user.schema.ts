@@ -21,12 +21,8 @@ export class User {
   @Prop()
   password: string;
 
-  // Phone number
-  @Prop()
-  phone?: string;
-
   @Prop({ default: false })
-  isPhoneVerified?: boolean;
+  isEmailVerified?: boolean;
 }
 
 // Create schema

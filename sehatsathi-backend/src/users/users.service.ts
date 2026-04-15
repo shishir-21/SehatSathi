@@ -129,6 +129,7 @@ export class UsersService {
     return this.userModel.create({
       ...userToSave,
       password: hashedPassword,
+      isEmailVerified: true,
     });
   }
 
