@@ -4,6 +4,15 @@
 
 🔗 Live App: https://sehat-sathi-alpha.vercel.app/login  
 
+## 🔑 Demo Credentials
+
+You can use the following credentials to explore the platform:
+
+**Email:** admin@test.com  
+**Password:** 123456
+
+⚠️ Note: This is a test account with limited access. Please do not modify critical data.
+
 ---
 
 ## 📌 Overview
