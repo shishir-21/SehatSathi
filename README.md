@@ -4,6 +4,8 @@
 
 🔗 Live App: https://sehat-sathi-alpha.vercel.app/login  
 
+<img width="1903" height="956" alt="image" src="https://github.com/user-attachments/assets/ad2ad7cb-d846-4020-b207-c2f07352e032" />
+
 ## 🔑 Demo Credentials
 
 You can use the following credentials to explore the platform:
