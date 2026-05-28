@@ -107,7 +107,7 @@ export default function HospitalProfile() {
                                      </div>
                                  </div>
                                  <Link 
-                                   href={`/doctor/${doc._id}`}
+                                   href={`/doctors/${doc._id}`}
                                    target="_blank"
                                    className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white font-semibold py-2 px-6 rounded-lg transition shadow-sm border border-blue-200"
                                  >

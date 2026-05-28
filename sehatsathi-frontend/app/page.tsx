@@ -168,7 +168,7 @@ export default function Home() {
           <div key={spec} className={styles.section}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>{spec}</h2>
-              <Link href={`/doctor?specialization=${encodeURIComponent(spec)}`} className={styles.seeAllBtn}>
+              <Link href={`/doctors?specialization=${encodeURIComponent(spec)}`} className={styles.seeAllBtn}>
                 ... SEE ALL
               </Link>
             </div>
@@ -207,7 +207,7 @@ export default function Home() {
                     
                     {/* View Profile Action */}
                     <Link 
-                      href={`/doctor/${doc._id}`}
+                      href={`/doctors/${doc._id}`}
                       target="_blank"
                       className={styles.bookBtn}
                     >
