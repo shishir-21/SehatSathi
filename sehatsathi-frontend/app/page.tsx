@@ -168,7 +168,7 @@ export default function Home() {
           <div key={spec} className={styles.section}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>{spec}</h2>
-              <Link href={`/doctors?specialization=${encodeURIComponent(spec)}`} className={styles.seeAllBtn}>
+              <Link href={`/doctor?specialization=${encodeURIComponent(spec)}`} className={styles.seeAllBtn}>
                 ... SEE ALL
               </Link>
             </div>
