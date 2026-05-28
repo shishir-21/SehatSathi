@@ -17,8 +17,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # Next.js calls this from the client browser, so we use localhost
-      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NEXT_PUBLIC_API_URL=https://sehatsathi-y19n.onrender.com
     depends_on:
       - backend
 
