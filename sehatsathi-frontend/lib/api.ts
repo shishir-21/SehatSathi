@@ -1,5 +1,5 @@
-// Base URL of your backend
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+// Base URL of your backend (with fallback to production URL if env is missing)
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://sehatsathi-y19n.onrender.com";
 
 // Fetch all doctors
 export async function getDoctors() {
