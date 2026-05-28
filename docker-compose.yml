@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./sehatsathi-backend
+    ports:
+      - "10000:10000"
+    environment:
+      - PORT=10000
+      - MONGO_URI=mongodb://mongo:27017/sehatsathi
+      - JWT_SECRET=supersecretjwtkey
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./sehatsathi-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # Next.js calls this from the client browser, so we use localhost
+      - NEXT_PUBLIC_API_URL=http://localhost:10000
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
