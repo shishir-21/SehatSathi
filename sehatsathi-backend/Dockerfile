@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expose the default port
-EXPOSE 10000
+EXPOSE 5000
 
 # Start the server using the production build
 CMD [ "npm", "run", "start:prod" ]

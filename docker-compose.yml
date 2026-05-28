@@ -3,9 +3,9 @@ services:
     build:
       context: ./sehatsathi-backend
     ports:
-      - "10000:10000"
+      - "5000:5000"
     environment:
-      - PORT=10000
+      - PORT=5000
       - MONGO_URI=mongodb://mongo:27017/sehatsathi
       - JWT_SECRET=supersecretjwtkey
     depends_on:
@@ -18,7 +18,7 @@ services:
       - "3000:3000"
     environment:
       # Next.js calls this from the client browser, so we use localhost
-      - NEXT_PUBLIC_API_URL=http://localhost:10000
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
     depends_on:
       - backend
 
