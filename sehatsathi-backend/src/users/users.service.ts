@@ -84,33 +84,9 @@ export class UsersService {
 
   // Signup user
   async create(data: any): Promise<User> {
-    if (!data.email || !data.otp) {
-      throw new BadRequestException('Email and OTP are required');
+    if (!data.email || !data.password) {
+      throw new BadRequestException('Email and Password are required');
     }
-
-    // Verify OTP
-    const registrations = await this.loadPendingRegistrations();
-    const pending = registrations[data.email];
-
-    if (!pending) {
-      throw new BadRequestException('No pending OTP request found for this email. Try sending it again.');
-    }
-
-    if (pending.otp !== data.otp) {
-      throw new BadRequestException('Invalid Verification Code');
-    }
-
-    // Check expiry (3 minutes)
-    if (Date.now() - pending.timestamp > 3 * 60 * 1000) {
-      // Opt to delete expired OTP here
-      delete registrations[data.email];
-      await this.savePendingRegistrations(registrations);
-      throw new BadRequestException('OTP has expired');
-    }
-
-    // OTP is valid! Delete it.
-    delete registrations[data.email];
-    await this.savePendingRegistrations(registrations);
 
     // Check if email already exists
     const existing = await this.userModel.findOne({ email: data.email });
@@ -123,13 +99,13 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const userToSave = { ...data };
-    delete userToSave.otp;
+    delete userToSave.otp; // just in case it's passed
 
     // Save user
     return this.userModel.create({
       ...userToSave,
       password: hashedPassword,
-      isEmailVerified: true,
+      isEmailVerified: true, // We can keep this true or remove it depending on requirements, I'll keep it true
     });
   }
 
