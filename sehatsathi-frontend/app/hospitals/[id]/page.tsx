@@ -108,7 +108,6 @@ export default function HospitalProfile() {
                                  </div>
                                  <Link 
                                    href={`/doctors/${doc._id}`}
-                                   target="_blank"
                                    className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white font-semibold py-2 px-6 rounded-lg transition shadow-sm border border-blue-200"
                                  >
                                     Book Consult &rarr;

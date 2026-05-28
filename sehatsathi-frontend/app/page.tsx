@@ -208,7 +208,6 @@ export default function Home() {
                     {/* View Profile Action */}
                     <Link 
                       href={`/doctors/${doc._id}`}
-                      target="_blank"
                       className={styles.bookBtn}
                     >
                       View Profile & Book
