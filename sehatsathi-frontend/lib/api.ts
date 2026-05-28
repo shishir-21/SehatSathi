@@ -1,5 +1,5 @@
-// Base URL of your backend
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+// Base URL of your backend (with fallback to production URL if env is missing)
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://sehatsathi-y19n.onrender.com";
 
 // Fetch all doctors
 export async function getDoctors() {
@@ -59,11 +59,11 @@ export async function uploadPrescription(file: File) {
   return res.json();
 }
 
-export async function generateOtp(phone: string) {
+export async function generateOtp(email: string) {
   const res = await fetch(`${BASE_URL}/users/generate-otp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ phone }),
+    body: JSON.stringify({ email }),
   });
   if (!res.ok) {
     const errorData = await res.json();
