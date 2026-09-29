@@ -23,8 +23,7 @@ export class AiService {
         ],
         diet: ["Avoid heavy meals"],
         schedule: ["Immediate ER visit"],
-        severity: "high",
-        recommendDoctor: true
+        severity: "high"
       };
     }
 
@@ -39,8 +38,7 @@ export class AiService {
         ],
         diet: ["Soup", "Khichdi", "Fresh Fruits", "Warm Water"],
         schedule: ["Check temperature every 4 hours"],
-        severity: "medium",
-        recommendDoctor: true
+        severity: "medium"
       };
     }
 
@@ -53,8 +51,7 @@ export class AiService {
       ],
       diet: ["Normal healthy diet", "Increase water intake"],
       schedule: ["Ensure 8 hours of sleep tonight"],
-      severity: "low",
-      recommendDoctor: false
+      severity: "low"
     };
   }
 

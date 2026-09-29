@@ -19,11 +19,10 @@ You can use the following credentials to explore the platform:
 
 ## 📌 Overview
 
-**MediBrain** is a full-stack healthcare platform that combines **AI assistance + doctor booking + health tracking** into one seamless experience.
+**MediBrain** is a full-stack healthcare platform that combines **AI assistance + hospital exploration + health tracking** into one seamless experience.
 
 It helps users:
-- Find doctors & hospitals
-- Book appointments
+- Explore hospitals
 - Get AI-based health guidance
 - Track symptoms & vitals
 
@@ -31,20 +30,9 @@ It helps users:
 
 ## ✨ Features
 
-### 👨‍⚕️ Doctor Discovery
-- Search doctors by specialization
-- View ratings and availability
-- Book appointments instantly
-
 ### 🏥 Hospital Explorer
 - Browse hospitals across India
 - View hospital details and services
-- Explore associated doctors
-
-### 📅 Appointment Booking
-- Slot-based scheduling
-- Real-time booking system
-- Prevents double booking
 
 ### 🤖 AI Health Assistant
 - Symptom-based guidance
@@ -169,9 +157,7 @@ npm run dev
 
 - `/auth/login`
 - `/users/signup`
-- `/doctors`
 - `/hospitals`
-- `/appointments`
 - `/ai/chat`
 
 ---
