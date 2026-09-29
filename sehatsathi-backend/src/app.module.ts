@@ -5,21 +5,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { DoctorsModule } from './doctors/doctors.module';
-import { AppointmentsModule } from './appointments/appointments.module';
 import { HospitalsModule } from './hospitals/hospitals.module';
 import { AiModule } from './ai/ai.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_URI as string),
-    AuthModule,
-    UsersModule,
-    DoctorsModule,
-    AppointmentsModule,
-    HospitalsModule,
-    AiModule,
+    AuthModule, UsersModule, HospitalsModule, AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
