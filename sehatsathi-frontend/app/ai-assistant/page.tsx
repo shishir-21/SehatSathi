@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { chatWithAI, uploadPrescription } from "@/lib/api";
 
 type Message = {
@@ -23,7 +22,6 @@ type Message = {
     diet?: string[];
     schedule?: string[];
     severity?: "low" | "medium" | "high";
-    recommendDoctor?: boolean;
   };
 };
 
@@ -217,19 +215,6 @@ export default function AIAssistant() {
                              </ul>
                            </div>
                         </div>
-
-                        {/* Doctor Link */}
-                        {msg.data.recommendDoctor && (
-                           <div className="mt-4 pt-4 border-t w-full">
-                              <p className="text-sm font-semibold text-gray-600 mb-3 text-center">Medical consultation is recommended for these symptoms.</p>
-                              <Link 
-                                href="/" 
-                                className={`block w-full text-center font-bold py-3 rounded-xl shadow-sm transition ${msg.data.severity === 'high' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
-                              >
-                                Book a Doctor Now &rarr;
-                              </Link>
-                           </div>
-                        )}
                      </div>
                    ) : null}
                 </div>
